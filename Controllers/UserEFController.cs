@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using DotnetAPI.Models;
 using DotnetAPI.Data;
 using DotnetAPI.DTOs;
+using AutoMapper;
 
 namespace DotnetAPI.Controllers;
 
@@ -12,9 +13,14 @@ public class UserEFController : ControllerBase
 
     EFContext _entityFramework;
 
+    IMapper _mapper;
+
     public UserEFController(IConfiguration config)
     {
         _entityFramework = new EFContext(config);
+        _mapper = new Mapper(new MapperConfiguration(cfg => {
+            cfg.CreateMap<UserToAddDTO, User>();
+        }));
         // Console.WriteLine(config.GetConnectionString("DefaultConnection"));
     }
 
@@ -70,18 +76,11 @@ public class UserEFController : ControllerBase
     [HttpPost("AddUser")]
     public IActionResult AddUser(UserToAddDTO user)
     { 
-        User userDb = new User();
+        User userDb = _mapper.Map<User>(user);
+        
+        _entityFramework.Add(userDb);
 
-       
-            userDb.Active = user.Active;
-            userDb.Email = user.Email;
-            userDb.FirstName = user.FirstName;
-            userDb.LastName = user.LastName;
-            userDb.Gender = user.Gender;
-
-            _entityFramework.Add(userDb);
-
-            if(_entityFramework.SaveChanges() > 0)
+        if(_entityFramework.SaveChanges() > 0)
         {
             return Ok();
         }
