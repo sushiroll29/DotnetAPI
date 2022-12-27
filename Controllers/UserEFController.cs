@@ -106,5 +106,124 @@ public class UserEFController : ControllerBase
 
         throw new Exception("Failed to get user.");
     }
+
+    [HttpGet("UserSalary/{userId}")]
+    public IEnumerable<UserSalary> GetUserSalaryEF(int userId)
+    {
+        return _entityFramework.UserSalary
+            .Where(u => u.UserId == userId)
+            .ToList();
+    }
+
+    [HttpPost("UserSalary")]
+    public IActionResult AddUserSalaryEF(UserSalary userToAdd)
+    {
+        _entityFramework.UserSalary.Add(userToAdd);
+        if (_entityFramework.SaveChanges() > 0)
+        {
+            return Ok();
+        }
+        throw new Exception("Adding user salary failed on save.");
+    }
+
+
+    [HttpPut("UserSalary")]
+    public IActionResult EditUserSalaryEF(UserSalary userToEdit)
+    {
+        UserSalary? userToUpdate = _entityFramework.UserSalary
+            .Where(u => u.UserId == userToEdit.UserId)
+            .FirstOrDefault();
+
+        if (userToUpdate != null)
+        {
+            _mapper.Map(userToUpdate, userToEdit);
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+            throw new Exception("Editing user salary failed on save.");
+        }
+        throw new Exception("Failed to find a user salary to edit.");
+    }
+
+
+    [HttpDelete("UserSalary/{userId}")]
+    public IActionResult DeleteUserSalaryEF(int userId)
+    {
+        UserSalary? userToDelete = _entityFramework.UserSalary
+            .Where(u => u.UserId == userId)
+            .FirstOrDefault();
+
+        if (userToDelete != null)
+        {
+            _entityFramework.UserSalary.Remove(userToDelete);
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+            throw new Exception("Deleting user salary failed on save.");
+        }
+        throw new Exception("Failed to find a user salary to delete.");
+    }
+
+
+    [HttpGet("UserJobInfo/{userId}")]
+    public IEnumerable<UserJobInfo> GetUserJobInfoEF(int userId)
+    {
+        return _entityFramework.UserJobInfo
+            .Where(u => u.UserId == userId)
+            .ToList();
+    }
+
+    [HttpPost("UserJobInfo")]
+    public IActionResult AddUserJobInfoEF(UserJobInfo userToAdd)
+    {
+        _entityFramework.UserJobInfo.Add(userToAdd);
+        if (_entityFramework.SaveChanges() > 0)
+        {
+            return Ok();
+        }
+        throw new Exception("Adding user job info failed on save.");
+    }
+
+
+    [HttpPut("UserJobInfo")]
+    public IActionResult EditUserJobInfoEf(UserJobInfo userToEdit)
+    {
+        UserJobInfo? userToUpdate = _entityFramework.UserJobInfo
+            .Where(u => u.UserId == userToEdit.UserId)
+            .FirstOrDefault();
+
+        if (userToUpdate != null)
+        {
+            _mapper.Map(userToUpdate, userToEdit);
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+            throw new Exception("Updating user job info failed on save.");
+        }
+        throw new Exception("Failed to find a user job info to edit.");
+    }
+
+
+    [HttpDelete("UserJobInfo/{userId}")]
+    public IActionResult DeleteUserJobInfoEF(int userId)
+    {
+        UserJobInfo? userToDelete = _entityFramework.UserJobInfo
+            .Where(u => u.UserId == userId)
+            .FirstOrDefault();
+
+        if (userToDelete != null)
+        {
+            _entityFramework.UserJobInfo.Remove(userToDelete);
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+            throw new Exception("Deleting user job info failed on save.");
+        }
+        throw new Exception("Failed to find a user job info to delete.");
+    }
     
 }
