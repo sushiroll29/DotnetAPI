@@ -71,3 +71,10 @@ obj/Debug/net7.0/refint/DotnetAPI.dll
 obj/Debug/net7.0/staticwebassets/msbuild.build.DotnetAPI.props
 obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.DotnetAPI.props
 obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.DotnetAPI.props
+bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+bin/Debug/net7.0/Microsoft.EntityFrameworkCore.dll
+bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Relational.dll
+bin/Debug/net7.0/Microsoft.EntityFrameworkCore.SqlServer.dll
+bin/Debug/net7.0/Microsoft.IdentityModel.Abstractions.dll
+bin/Debug/net7.0/Microsoft.SqlServer.Server.dll
+bin/Debug/net7.0/System.Memory.Data.dll
