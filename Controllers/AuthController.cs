@@ -1,4 +1,6 @@
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using DotnetAPI.Data;
@@ -6,6 +8,7 @@ using DotnetAPI.DTOs;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DotnetAPI.Controllers
 {
@@ -106,7 +109,14 @@ namespace DotnetAPI.Controllers
                 }
             }
 
-            return Ok();
+            string userIdSql = @"
+                SELECT UserId FROM TutorialAppSchema.Users WHERE Email = '" + userForLogin.Email + "'";
+
+            int userId = _dapper.LoadDataSingle<int>(userIdSql);
+
+            return Ok(new Dictionary<string, string>{
+                {"token", CreateToken(userId)}
+            });
         }
 
     private byte[] GetPasswordHash(string password, byte[] passwordSalt)
@@ -123,6 +133,39 @@ namespace DotnetAPI.Controllers
         );
 
 
+    }
+
+    private string CreateToken(int userId)
+    {
+        Claim[] claims = new Claim[] {
+            new Claim("userId", userId.ToString())
+        };
+
+        string? tokenKeyString =  _config.GetSection("Appsettings:TokenKey").Value;
+
+        SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                tokenKeyString != null ? tokenKeyString : ""
+            )
+        );
+
+        SigningCredentials credentials = new SigningCredentials(
+            key: tokenKey,
+            SecurityAlgorithms.HmacSha512Signature
+        );
+
+        SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
+        {
+            Subject = new ClaimsIdentity(claims),
+            SigningCredentials = credentials,
+            Expires = DateTime.Now.AddDays(1)
+        };
+
+        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+        SecurityToken token = tokenHandler.CreateToken(descriptor);
+
+        return tokenHandler.WriteToken(token); //returns the token as a string
     }
 
     }
