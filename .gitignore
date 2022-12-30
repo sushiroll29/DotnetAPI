@@ -78,3 +78,4 @@ bin/Debug/net7.0/Microsoft.EntityFrameworkCore.SqlServer.dll
 bin/Debug/net7.0/Microsoft.IdentityModel.Abstractions.dll
 bin/Debug/net7.0/Microsoft.SqlServer.Server.dll
 bin/Debug/net7.0/System.Memory.Data.dll
+bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
